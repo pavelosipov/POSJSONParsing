@@ -34,7 +34,7 @@ Tiny wrapper around NSJSONSerialization to parse JSON. Its major features are:
 
 + (Menu *)parseMenu:(NSError **)error {
     @try {
-        POSJSONMap *JSON = [self exampleJSON];
+        POSJSONMap *JSON = [[[self exampleJSON] extract:@"menu"] asMap];
         Menu *menu = [Menu new];
         // mandatory parameters
         menu.header = [[JSON extract:@"header"] asString];
