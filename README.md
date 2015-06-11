@@ -17,7 +17,7 @@ Tiny wrapper around NSJSONSerialization to parse JSON. Its major features are:
 
 @implementation Menu
 
-+ (POSJSONMap *)exmpleJSON {
++ (POSJSONMap *)exampleJSON {
     return [[POSJSONMap alloc] initWithData:[
         @"{\"menu\": {"
         "    \"header\": \"SVG Viewer\","
