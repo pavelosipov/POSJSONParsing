@@ -1,4 +1,4 @@
-<h1>Wrapper around NSJSONSerialization
+<h1>Wrapper around NSJSONSerialization</h1>
 Tiny wrapper around NSJSONSerialization to parse JSON. Its major features are:
 
 * Detailed error reporting.
