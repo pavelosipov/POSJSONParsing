@@ -57,7 +57,7 @@ Tiny wrapper around NSJSONSerialization to parse JSON. Its major features are:
 ```
 
 If to replace in the example above `[[JSON tryExtract:@"width"] asNumber]` with
-`[[JSON extract:@"width"] asNumber]` exception with the following reason will be thrown:
+`[[JSON extract:@"width"] asNumber]` exception will be thrown with the following reason:
 ```
 'root.menu' doesn't contain object with key 'width' in JSON:
 {
