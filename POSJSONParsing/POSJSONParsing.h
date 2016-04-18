@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class POSJSONObject;
 
 /// Represents JSON structure with fields.
@@ -20,7 +22,7 @@
 - (POSJSONObject *)extract:(NSString *)key;
 
 /// @return object at field 'key' or nil if it doesn't exist.
-- (POSJSONObject *)tryExtract:(NSString *)key;
+- (nullable POSJSONObject *)tryExtract:(NSString *)key;
 
 /// The designated initializer.
 - (instancetype)initWithData:(NSData *)data;
@@ -45,4 +47,9 @@
 /// @return POSJSONMap or throws NSException if object doesn't represent JSON structure.
 - (POSJSONMap *)asMap;
 
+/// @return NSURL or thrown NSException if URL is malformed.
+- (NSURL *)asURL;
+
 @end
+
+NS_ASSUME_NONNULL_END

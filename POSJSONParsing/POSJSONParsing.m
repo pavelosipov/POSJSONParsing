@@ -9,6 +9,8 @@
 #import "POSJSONParsing.h"
 #import <objc/runtime.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface NSException (POSJSONParsing)
 @end
 
@@ -77,6 +79,14 @@
     return [[POSJSONMap alloc] initWithName:_name
                                      values:[self p_as:[NSDictionary class]]
                                   allValues:_allValues];
+}
+
+- (NSURL *)asURL {
+    NSURL *URL = [NSURL URLWithString:[self asString]];
+    if (!URL) {
+        [NSException pos_throw:@"%@ is not an URL\n%@", _name, _allValues];
+    }
+    return URL;
 }
 
 #pragma mark Private
@@ -157,7 +167,7 @@
                                      allValues:_allValues];
 }
 
-- (POSJSONObject *)tryExtract:(NSString *)key {
+- (nullable POSJSONObject *)tryExtract:(NSString *)key {
     id value = _values[key];
     if (!value) {
         return nil;
@@ -168,3 +178,5 @@
 }
 
 @end
+
+NS_ASSUME_NONNULL_END
