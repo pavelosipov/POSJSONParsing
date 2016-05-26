@@ -177,6 +177,18 @@ NS_ASSUME_NONNULL_BEGIN
                                      allValues:_allValues];
 }
 
+- (NSArray *)map:(id (^)(NSString *key, POSJSONObject *value))block {
+    NSParameterAssert(block);
+    NSMutableArray *mappedValues = [[NSMutableArray alloc] initWithCapacity:_values.count];
+    [_values enumerateKeysAndObjectsUsingBlock:^(id key, id value, BOOL *stop) {
+        [mappedValues addObject:block(key, [[POSJSONObject alloc]
+                                            initWithName:[key description]
+                                            value:value
+                                            allValues:_allValues])];
+    }];
+    return mappedValues;
+}
+
 @end
 
 NS_ASSUME_NONNULL_END
