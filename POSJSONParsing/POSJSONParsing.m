@@ -16,13 +16,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @implementation NSException (POSJSONParsing)
 
-+ (void)pos_throw:(NSString *)format, ... {
++ (NSException *)pos_exceptionWithFormat:(NSString *)format, ... {
     NSParameterAssert(format);
     va_list args;
     va_start(args, format);
     NSString *reason = [[NSString alloc] initWithFormat:format arguments:args];
     va_end(args);
-    @throw [NSException exceptionWithName:NSInvalidArgumentException reason:reason userInfo:nil];
+    return [NSException exceptionWithName:NSInvalidArgumentException reason:reason userInfo:nil];
 }
 
 @end
@@ -84,7 +84,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSURL *)asURL {
     NSURL *URL = [NSURL URLWithString:[self asString]];
     if (!URL) {
-        [NSException pos_throw:@"%@ is not an URL\n%@", _name, _allValues];
+        @throw [NSException pos_exceptionWithFormat:@"%@ is not an URL\n%@", _name, _allValues];
     }
     return URL;
 }
@@ -93,12 +93,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (id)p_as:(Class)aClass {
     if (![_value isKindOfClass:aClass]) {
-        [NSException pos_throw:@"%@ is not %s but %s in JSON:\n%@",
-         _name,
-         class_getName(aClass),
-         class_getName([_value class]),
-         _allValues];
-        return nil;
+        @throw [NSException pos_exceptionWithFormat:@"%@ is not %s but %s in JSON:\n%@",
+                _name,
+                class_getName(aClass),
+                class_getName([_value class]),
+                _allValues];
     }
     return _value;
 }
@@ -127,16 +126,17 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initWithData:(NSData *)data {
     if (!data) {
-        [NSException pos_throw:@"JSON data is nil"];
+        @throw [NSException pos_exceptionWithFormat:@"JSON data is nil"];
     }
     NSString *allValues = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     NSError *error;
     id values = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
     if (!values) {
-        [NSException pos_throw:@"JSON parsing failed with '%@':\n%@", [error localizedDescription], allValues];
+        @throw [NSException pos_exceptionWithFormat:@"JSON parsing failed with '%@':\n%@",
+                [error localizedDescription], allValues];
     }
     if (![values isKindOfClass:[NSDictionary class]]) {
-        [NSException pos_throw:@"Root JSON object is not a struct:\n%@", allValues];
+        @throw [NSException pos_exceptionWithFormat:@"Root JSON object is not a struct:\n%@", allValues];
     }
     return [self initWithName:@"root" values:values allValues:allValues];
 }
@@ -160,7 +160,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (POSJSONObject *)extract:(NSString *)key {
     id value = _values[key];
     if (!value) {
-        [NSException pos_throw:@"'%@' doesn't contain object with key '%@' in JSON:\n%@", _name, key, _allValues];
+        @throw [NSException pos_exceptionWithFormat:@"'%@' doesn't contain object with key '%@' in JSON:\n%@",
+                _name, key, _allValues];
     }
     return [[POSJSONObject alloc] initWithName:[NSString stringWithFormat:@"%@.%@", _name, key]
                                          value:value
