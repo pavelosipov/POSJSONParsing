@@ -190,6 +190,15 @@ NS_ASSUME_NONNULL_BEGIN
     return mappedValues;
 }
 
+#pragma mark NSObject
+
+- (NSString *)description {
+    if (!_allValues) {
+        return [super description];
+    }
+    return [NSString stringWithFormat:@"%@: %@=%@", super.description, _name, _values];
+}
+
 @end
 
 NS_ASSUME_NONNULL_END
