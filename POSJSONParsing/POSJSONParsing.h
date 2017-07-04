@@ -44,6 +44,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// @return NSString or throws NSException if object has another type.
 - (NSString *)asString;
 
+/// @return NSString with length 1 or more or throws NSException if object has another type.
+- (NSString *)asNonemptyString;
+
 /// @return NSArray of POSJSONObjects or throws NSException if object has another type.
 - (NSArray *)asArray;
 
@@ -52,6 +55,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// @return NSURL or thrown NSException if URL is malformed.
 - (NSURL *)asURL;
+
+/// @return NSUUID or throws NSException if object was not created.
+- (NSUUID *)asUUID;
 
 @end
 

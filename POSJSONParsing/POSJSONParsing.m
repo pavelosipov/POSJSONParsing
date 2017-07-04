@@ -65,6 +65,14 @@ NS_ASSUME_NONNULL_BEGIN
     return [self p_as:[NSString class]];
 }
 
+- (NSString *)asNonemptyString {
+    NSString *value = [self asString];
+    if (value.length == 0) {
+        @throw [NSException pos_exceptionWithFormat:@"%@ is empty in JSON:\n%@", _name, _allValues];
+    }
+    return value;
+}
+
 - (NSArray *)asArray {
     NSMutableArray *values = [NSMutableArray new];
     [[self p_as:[NSArray class]] enumerateObjectsUsingBlock:^(id element, NSUInteger idx, BOOL *stop) {
@@ -87,6 +95,14 @@ NS_ASSUME_NONNULL_BEGIN
         @throw [NSException pos_exceptionWithFormat:@"%@ is not an URL\n%@", _name, _allValues];
     }
     return URL;
+}
+
+- (NSUUID *)asUUID {
+    NSUUID *value = [[NSUUID alloc] initWithUUIDString:[self asNonemptyString]];
+    if (!value) {
+        @throw [NSException pos_exceptionWithFormat:@"%@ is not an valid UUID\n%@", _name, _allValues];
+    }
+    return value;
 }
 
 #pragma mark Private

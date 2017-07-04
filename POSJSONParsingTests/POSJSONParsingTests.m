@@ -25,6 +25,9 @@
                       "        {\"id\": \"OpenNew\", \"label\": \"Open New\"},"
                       "        null,"
                       "        {\"id\": \"ZoomIn\", \"label\": \"Zoom In\"},"
+                      "        {\"id\": \"BadClose\", \"uuid\": \"da401e4c-590a\"},"
+                      "        {\"id\": \"EmptyClose\", \"uuid\": \"\"},"
+                      "        {\"id\": \"GoodClose\", \"uuid\": \"da401e4c-590a-4fb3-be63-b984ab12c0a8\"},"
                       "    ]"
                       "}}";
     self.data = [JSON dataUsingEncoding:NSUTF8StringEncoding];
@@ -45,9 +48,25 @@
 - (void)testArrayParsing {
     POSJSONMap *values = [[POSJSONMap alloc] initWithData:_data];
     NSArray *items = [[[[values extract:@"menu"] asMap] extract:@"items"] asArray];
-    XCTAssertTrue(items.count == 4);
+    XCTAssertTrue(items.count == 7);
     POSJSONMap *itemValues = [items[0] asMap];
     XCTAssertTrue([[[itemValues extract:@"id"] asString] isEqualToString:@"Open"]);
+}
+
+- (void)testUUIDParsing {
+    POSJSONMap *values = [[POSJSONMap alloc] initWithData:_data];
+    NSArray *items = [[[[values extract:@"menu"] asMap] extract:@"items"] asArray];
+    POSJSONMap *badValue = [items[4] asMap];
+    XCTAssertTrue([[[badValue extract:@"id"] asString] isEqualToString:@"BadClose"]);
+    XCTAssertThrows([[badValue extract:@"uuid"] asUUID]);
+    POSJSONMap *emptyValue = [items[5] asMap];
+    XCTAssertTrue([[[emptyValue extract:@"id"] asString] isEqualToString:@"EmptyClose"]);
+    XCTAssertThrows([[emptyValue extract:@"uuid"] asNonemptyString]);
+    XCTAssertThrows([[emptyValue extract:@"uuid"] asUUID]);
+    POSJSONMap *goodValue = [items[6] asMap];
+    XCTAssertTrue([[[goodValue extract:@"id"] asString] isEqualToString:@"GoodClose"]);
+    XCTAssertTrue([[[goodValue extract:@"uuid"] asUUID]
+                   isEqual:[[NSUUID alloc] initWithUUIDString:@"da401e4c-590a-4fb3-be63-b984ab12c0a8"]]);
 }
 
 - (void)testNullParsing {
