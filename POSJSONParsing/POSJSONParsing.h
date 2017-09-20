@@ -25,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (nullable POSJSONObject *)tryExtract:(NSString *)key;
 
 /// Maps all key-value pairs to other objects.
-- (NSArray<POSJSONObject *> *)map:(id(^)(NSString *key, POSJSONObject *value))block;
+- (NSArray *)map:(id(^)(NSString *key, POSJSONObject *value))block;
 
 /// The designated initializer.
 - (instancetype)initWithData:(NSData *)data;
@@ -48,7 +48,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSString *)asNonemptyString;
 
 /// @return NSArray of POSJSONObjects or throws NSException if object has another type.
-- (NSArray *)asArray;
+- (NSArray<POSJSONObject *> *)asArray;
 
 /// @return POSJSONMap or throws NSException if object doesn't represent JSON structure.
 - (POSJSONMap *)asMap;
