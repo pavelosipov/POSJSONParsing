@@ -95,4 +95,13 @@
     XCTAssertThrows([[POSJSONMap alloc] initWithData:[@"blah\nblah" dataUsingEncoding:NSUTF8StringEncoding]]);
 }
 
+- (void)testJSONWithArrayRootObject {
+    NSString *JSON = @"[{\"key1\":\"value1\"},{\"key2\":\"value2\"}]";
+    POSJSONObject *arrayJSON = [[POSJSONObject alloc] initWithData:[JSON dataUsingEncoding:NSUTF8StringEncoding]];
+    NSArray<POSJSONObject *> *values = [arrayJSON asArray];
+    XCTAssertTrue(values.count == 2);
+    POSJSONMap *firstObject = [values.firstObject asMap];
+    XCTAssertEqualObjects([[firstObject extract:@"key1"] asString], @"value1");
+}
+
 @end

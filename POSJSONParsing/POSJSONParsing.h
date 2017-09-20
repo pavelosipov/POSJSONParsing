@@ -25,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (nullable POSJSONObject *)tryExtract:(NSString *)key;
 
 /// Maps all key-value pairs to other objects.
-- (NSArray *)map:(id(^)(NSString *key, POSJSONObject *value))block;
+- (NSArray<POSJSONObject *> *)map:(id(^)(NSString *key, POSJSONObject *value))block;
 
 /// The designated initializer.
 - (instancetype)initWithData:(NSData *)data;
@@ -58,6 +58,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// @return NSUUID or throws NSException if object was not created.
 - (NSUUID *)asUUID;
+
+/// The designated initializer.
+- (instancetype)initWithData:(NSData *)data;
 
 @end
 

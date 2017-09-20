@@ -41,6 +41,20 @@ NS_ASSUME_NONNULL_BEGIN
 
 @implementation POSJSONObject
 
+- (instancetype)initWithData:(NSData *)data {
+    if (!data) {
+        @throw [NSException pos_exceptionWithFormat:@"JSON data is nil"];
+    }
+    NSString *allValues = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    NSError *error;
+    id value = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+    if (!value) {
+        @throw [NSException pos_exceptionWithFormat:@"JSON parsing failed with '%@':\n%@",
+                [error localizedDescription], allValues];
+    }
+    return [self initWithName:@"root" value:value allValues:allValues];
+}
+
 - (instancetype)initWithName:(NSString *)name value:(id)value allValues:(NSString *)allValues {
     NSParameterAssert(name);
     NSParameterAssert(value);
@@ -73,7 +87,7 @@ NS_ASSUME_NONNULL_BEGIN
     return value;
 }
 
-- (NSArray *)asArray {
+- (NSArray<POSJSONObject *> *)asArray {
     NSMutableArray *values = [NSMutableArray new];
     [[self p_as:[NSArray class]] enumerateObjectsUsingBlock:^(id element, NSUInteger idx, BOOL *stop) {
         [values addObject:[[POSJSONObject alloc] initWithName:[NSString stringWithFormat:@"%@[%@]", _name, @(idx)]
@@ -118,7 +132,6 @@ NS_ASSUME_NONNULL_BEGIN
     return _value;
 }
 
-
 @end
 
 #pragma mark -
@@ -141,20 +154,8 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (instancetype)initWithData:(NSData *)data {
-    if (!data) {
-        @throw [NSException pos_exceptionWithFormat:@"JSON data is nil"];
-    }
-    NSString *allValues = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-    NSError *error;
-    id values = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
-    if (!values) {
-        @throw [NSException pos_exceptionWithFormat:@"JSON parsing failed with '%@':\n%@",
-                [error localizedDescription], allValues];
-    }
-    if (![values isKindOfClass:[NSDictionary class]]) {
-        @throw [NSException pos_exceptionWithFormat:@"Root JSON object is not a struct:\n%@", allValues];
-    }
-    return [self initWithName:@"root" values:values allValues:allValues];
+    POSJSONObject *object = [[POSJSONObject alloc] initWithData:data];
+    return [self initWithName:@"root" values:[object p_as:NSDictionary.class] allValues:object.allValues];
 }
 
 - (instancetype)initWithName:(NSString *)name values:(NSDictionary *)values allValues:(NSString *)allValues {
