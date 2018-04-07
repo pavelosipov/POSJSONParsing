@@ -90,9 +90,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSArray<POSJSONObject *> *)asArray {
     NSMutableArray *values = [NSMutableArray new];
     [[self p_as:[NSArray class]] enumerateObjectsUsingBlock:^(id element, NSUInteger idx, BOOL *stop) {
-        [values addObject:[[POSJSONObject alloc] initWithName:[NSString stringWithFormat:@"%@[%@]", _name, @(idx)]
+        [values addObject:[[POSJSONObject alloc] initWithName:[NSString stringWithFormat:@"%@[%@]", self->_name, @(idx)]
                                                         value:element
-                                                    allValues:_allValues]];
+                                                    allValues:self->_allValues]];
     }];
     return values;
 }
@@ -202,7 +202,7 @@ NS_ASSUME_NONNULL_BEGIN
         [mappedValues addObject:block(key, [[POSJSONObject alloc]
                                             initWithName:[key description]
                                             value:value
-                                            allValues:_allValues])];
+                                            allValues:self->_allValues])];
     }];
     return mappedValues;
 }
