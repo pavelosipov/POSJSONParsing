@@ -187,7 +187,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (nullable POSJSONObject *)tryExtract:(NSString *)key {
     id value = _values[key];
-    if (!value) {
+    if (!value || [value isKindOfClass:[NSNull class]]) {
         return nil;
     }
     return [[POSJSONObject alloc] initWithName:[NSString stringWithFormat:@"%@.%@", _name, key]
