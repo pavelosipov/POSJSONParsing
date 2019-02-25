@@ -71,6 +71,38 @@ NS_ASSUME_NONNULL_BEGIN
     return [_value isKindOfClass:[NSNull class]];
 }
 
+- (BOOL)isNumber {
+    return [_value isKindOfClass:[NSNumber class]];
+}
+
+- (BOOL)isString {
+    return [_value isKindOfClass:[NSString class]];
+}
+
+- (BOOL)isArray {
+    return [_value isKindOfClass:[NSArray class]];
+}
+
+- (BOOL)isMap {
+    return [_value isKindOfClass:[NSDictionary class]];
+}
+
+- (BOOL)isURL {
+    if (![self isString]) {
+        return NO;
+    }
+    NSURL *url = [NSURL URLWithString:_value];
+    return url != nil;
+}
+
+- (BOOL)isUUID {
+    if (![self isString]) {
+        return NO;
+    }
+    NSUUID *UUID = [[NSUUID alloc] initWithUUIDString:_value];
+    return UUID != nil;
+}
+
 - (NSNumber *)asNumber {
     return [self p_as:[NSNumber class]];
 }

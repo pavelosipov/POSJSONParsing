@@ -104,4 +104,60 @@
     XCTAssertEqualObjects([[firstObject extract:@"key1"] asString], @"value1");
 }
 
+- (void)testIsNumber {
+    NSString *JSON = @"{\"key\":403}";
+    POSJSONMap *map = [[POSJSONMap alloc] initWithData:[JSON dataUsingEncoding:NSUTF8StringEncoding]];
+    POSJSONObject *node = [map extract:@"key"];
+    XCTAssertTrue([node isNumber]);
+    XCTAssertFalse([node isString]);
+    XCTAssertFalse([node isArray]);
+}
+
+- (void)testIsString {
+    NSString *JSON = @"{\"key\":\"value\"}";
+    POSJSONMap *map = [[POSJSONMap alloc] initWithData:[JSON dataUsingEncoding:NSUTF8StringEncoding]];
+    POSJSONObject *node = [map extract:@"key"];
+    XCTAssertTrue([node isString]);
+    XCTAssertFalse([node isNumber]);
+    XCTAssertFalse([node isArray]);
+}
+
+- (void)testIsArray {
+    NSString *JSON = @"[{\"key1\":\"value1\"},{\"key2\":\"value2\"}]";
+    POSJSONObject *JSONObject = [[POSJSONObject alloc] initWithData:[JSON dataUsingEncoding:NSUTF8StringEncoding]];
+    XCTAssertTrue([JSONObject isArray]);
+    XCTAssertFalse([JSONObject isString]);
+    XCTAssertFalse([JSONObject isNumber]);
+}
+
+- (void)testIsMap {
+    NSString *JSON = @"{\"key\":{\"key1\": \"value\"}}";
+    POSJSONMap *map = [[POSJSONMap alloc] initWithData:[JSON dataUsingEncoding:NSUTF8StringEncoding]];
+    POSJSONObject *node = [map extract:@"key"];
+    XCTAssertTrue([node isMap]);
+    XCTAssertFalse([node isString]);
+    XCTAssertFalse([node isNumber]);
+    XCTAssertFalse([node isArray]);
+}
+
+- (void)testIsURL {
+    NSString *JSON = @"{\"key\":\"https://mail.ru\"}";
+    POSJSONMap *map = [[POSJSONMap alloc] initWithData:[JSON dataUsingEncoding:NSUTF8StringEncoding]];
+    POSJSONObject *node = [map extract:@"key"];
+    XCTAssertTrue([node isString]);
+    XCTAssertTrue([node isURL]);
+    XCTAssertFalse([node isNumber]);
+    XCTAssertFalse([node isArray]);
+}
+
+- (void)testIsUUID {
+    NSString *JSON = @"{\"key\":\"72881a22-38eb-11e9-b210-d663bd873d93\"}";
+    POSJSONMap *map = [[POSJSONMap alloc] initWithData:[JSON dataUsingEncoding:NSUTF8StringEncoding]];
+    POSJSONObject *node = [map extract:@"key"];
+    XCTAssertTrue([node isString]);
+    XCTAssertTrue([node isUUID]);
+    XCTAssertFalse([node isNumber]);
+    XCTAssertFalse([node isArray]);
+}
+
 @end
