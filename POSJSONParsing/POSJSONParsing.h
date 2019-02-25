@@ -38,6 +38,24 @@ NS_ASSUME_NONNULL_BEGIN
 /// @return YES if objects represents null JSON value or throws NSException if doesn't.
 - (BOOL)isNull;
 
+/// @return YES if value represents NSNumber value or NO if doesn't
+- (BOOL)isNumber;
+
+/// @return YES if value represents NSString value or NO if doesn't
+- (BOOL)isString;
+
+/// @return YES if value represents NSArray value or NO if doesn't
+- (BOOL)isArray;
+
+/// @return YES if value represents NSDictionary value or NO if doesn't
+- (BOOL)isMap;
+
+/// @return YES if NSURL can be created with the value or NO otherwise
+- (BOOL)isURL;
+
+/// @return YES if UUID can be created with the value or NO otherwise
+- (BOOL)isUUID;
+
 /// @return NSNumber or throws NSException if object has another type.
 - (NSNumber *)asNumber;
 
