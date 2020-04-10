@@ -27,6 +27,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// Maps all key-value pairs to other objects.
 - (NSArray *)map:(id(^)(NSString *key, POSJSONObject *value))block;
 
+/// Maps all key-value pairs to other objects and put them into dictionary with keys from map.
+- (NSDictionary *)mapToDictionary:(id(^)(NSString *key, POSJSONObject *value))block;
+
 /// The designated initializer.
 - (instancetype)initWithData:(NSData *)data;
 
