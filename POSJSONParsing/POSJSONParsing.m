@@ -239,6 +239,18 @@ NS_ASSUME_NONNULL_BEGIN
     return mappedValues;
 }
 
+- (NSDictionary *)mapToDictionary:(id (^)(NSString *key, POSJSONObject *object))block {
+    NSParameterAssert(block);
+    NSMutableDictionary *mappedValues = [[NSMutableDictionary alloc] initWithCapacity:_values.count];
+    [_values enumerateKeysAndObjectsUsingBlock:^(id key, id value, BOOL *stop) {
+        mappedValues[key] = block(key, [[POSJSONObject alloc]
+                                        initWithName:[key description]
+                                        value:value
+                                        allValues:self->_allValues]);
+    }];
+    return mappedValues;
+}
+
 #pragma mark NSObject
 
 - (NSString *)description {
