@@ -16,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @implementation NSException (POSJSONParsing)
 
-+ (NSException *)pos_exceptionWithFormat:(NSString *)format, ... {
++ (NSException *)posjson_exceptionWithFormat:(NSString *)format, ... {
     NSParameterAssert(format);
     va_list args;
     va_start(args, format);
@@ -43,13 +43,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initWithData:(NSData *)data {
     if (!data) {
-        @throw [NSException pos_exceptionWithFormat:@"JSON data is nil"];
+        @throw [NSException posjson_exceptionWithFormat:@"JSON data is nil"];
     }
     NSString *allValues = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     NSError *error;
     id value = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
     if (!value) {
-        @throw [NSException pos_exceptionWithFormat:@"JSON parsing failed with '%@':\n%@",
+        @throw [NSException posjson_exceptionWithFormat:@"JSON parsing failed with '%@':\n%@",
                 [error localizedDescription], allValues];
     }
     return [self initWithName:@"root" value:value allValues:allValues];
@@ -114,7 +114,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSString *)asNonemptyString {
     NSString *value = [self asString];
     if (value.length == 0) {
-        @throw [NSException pos_exceptionWithFormat:@"%@ is empty in JSON:\n%@", _name, _allValues];
+        @throw [NSException posjson_exceptionWithFormat:@"%@ is empty in JSON:\n%@", _name, _allValues];
     }
     return value;
 }
@@ -138,7 +138,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSURL *)asURL {
     NSURL *URL = [NSURL URLWithString:[self asString]];
     if (!URL) {
-        @throw [NSException pos_exceptionWithFormat:@"%@ is not an URL\n%@", _name, _allValues];
+        @throw [NSException posjson_exceptionWithFormat:@"%@ is not an URL\n%@", _name, _allValues];
     }
     return URL;
 }
@@ -146,7 +146,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSUUID *)asUUID {
     NSUUID *value = [[NSUUID alloc] initWithUUIDString:[self asNonemptyString]];
     if (!value) {
-        @throw [NSException pos_exceptionWithFormat:@"%@ is not an valid UUID\n%@", _name, _allValues];
+        @throw [NSException posjson_exceptionWithFormat:@"%@ is not an valid UUID\n%@", _name, _allValues];
     }
     return value;
 }
@@ -155,7 +155,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (id)p_as:(Class)aClass {
     if (![_value isKindOfClass:aClass]) {
-        @throw [NSException pos_exceptionWithFormat:@"%@ is not %s but %s in JSON:\n%@",
+        @throw [NSException posjson_exceptionWithFormat:@"%@ is not %s but %s in JSON:\n%@",
                 _name,
                 class_getName(aClass),
                 class_getName([_value class]),
@@ -209,7 +209,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (POSJSONObject *)extract:(NSString *)key {
     id value = _values[key];
     if (!value) {
-        @throw [NSException pos_exceptionWithFormat:@"'%@' doesn't contain object with key '%@' in JSON:\n%@",
+        @throw [NSException posjson_exceptionWithFormat:@"'%@' doesn't contain object with key '%@' in JSON:\n%@",
                 _name, key, _allValues];
     }
     return [[POSJSONObject alloc] initWithName:[NSString stringWithFormat:@"%@.%@", _name, key]

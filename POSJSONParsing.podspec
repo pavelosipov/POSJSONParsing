@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = 'POSJSONParsing'
-  s.version      = '1.7.1'
+  s.version      = '1.7.2'
   s.license      = 'MIT'
   s.summary      = 'Tiny wrapper around NSJSONSerialization to parse JSON with fluent API and detailed error reporting.'
   s.homepage     = 'https://github.com/pavelosipov/POSJSONParsing'
